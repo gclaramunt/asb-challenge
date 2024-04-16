@@ -1,12 +1,10 @@
 package gclaramunt.asbchallenge
 
-
 import cats.effect.IO
 import gclaramunt.asbchallenge.api.AsbchallengeRoutes
 import org.http4s._
 import org.http4s.implicits._
 import munit.CatsEffectSuite
-
 
 class AsbChallengeRoutesSpec extends CatsEffectSuite {
 
@@ -15,7 +13,10 @@ class AsbChallengeRoutesSpec extends CatsEffectSuite {
   }
 
   test("project returns project metrics") {
-    assertIO(retProject.flatMap(_.as[String]), "{\"totalContributors\":0,\"totalCommits\":0,\"totalClosedPRs\":0,\"totalOpenPRs\":0}")
+    assertIO(
+      retProject.flatMap(_.as[String]),
+      "{\"totalContributors\":0,\"totalCommits\":0,\"totalClosedPRs\":0,\"totalOpenPRs\":0}"
+    )
   }
 
   test("contributors returns returns status code 200") {
@@ -23,18 +24,30 @@ class AsbChallengeRoutesSpec extends CatsEffectSuite {
   }
 
   test("contributors returns project metrics") {
-    assertIO(retContributor.flatMap(_.as[String]), "{\"totalProjects\":0,\"totalCommits\":0,\"totalClosedPRs\":0,\"totalOpenPRs\":0}")
+    assertIO(
+      retContributor.flatMap(_.as[String]),
+      "{\"totalProjects\":0,\"totalCommits\":0,\"totalClosedPRs\":0,\"totalOpenPRs\":0}"
+    )
   }
 
   private[this] val retProject: IO[Response[IO]] = {
-    val getProject = Request[IO](Method.GET, uri"/projects/123/metrics")
-    val pm = ProjectMetrics.impl[IO]
+    val getProject = Request[IO](Method.GET, uri"/projects/user1/proj1/metrics")
+    val pm = new ProjectMetrics[IO] {
+      override def get(
+          projectUser: String,
+          projectRepo: String
+      ): IO[ProjectMetrics.Aggregation] =
+        IO.pure(ProjectMetrics.Aggregation(0, 0, 0, 0))
+    }
     AsbchallengeRoutes.projectRoutes(pm).orNotFound(getProject)
   }
 
   private[this] val retContributor: IO[Response[IO]] = {
     val getContributor = Request[IO](Method.GET, uri"/contributors/123/metrics")
-    val cm = ContributorMetrics.impl[IO]
+    val cm = new ContributorMetrics[IO] {
+      override def get(id: Long): IO[ContributorMetrics.Aggregation] =
+        IO.pure(ContributorMetrics.Aggregation(0, 0, 0, 0))
+    }
     AsbchallengeRoutes.contributorRoutes(cm).orNotFound(getContributor)
   }
 

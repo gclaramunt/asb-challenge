@@ -27,3 +27,5 @@ lazy val root = (project in file("."))
       case x                   => (assembly / assemblyMergeStrategy).value.apply(x)
     }
   )
+
+addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
