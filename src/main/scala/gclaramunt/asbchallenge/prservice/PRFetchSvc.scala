@@ -44,7 +44,7 @@ class PRFetchSvc(httpClient: Client[IO]) {
       )
       .flatMap {
         case GHResponse(Right(prList), _, _) =>
-          IO.pure(prList.map(pr => PRUserCommit(pr.login, pullId)))
+          IO.pure(prList.map(pr => PRUserCommit(pr.sha, pr.login, pullId)))
         case GHResponse(Left(error), _, _) => IO.raiseError(error)
       }
   }

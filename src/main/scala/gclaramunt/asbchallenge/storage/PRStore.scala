@@ -50,8 +50,8 @@ object PRStore {
   val insertPRCommit: Command[PRUserCommit] =
     sql"""
       INSERT INTO pr_commit
-      (login, pull_request_id)
-      VALUES($varchar, $int4)
+      (sha, login, pull_request_id)
+      VALUES($varchar, $varchar, $int4)
       ON CONFLICT DO NOTHING;
     """.command.to[PRUserCommit]
 }
