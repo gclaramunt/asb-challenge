@@ -29,3 +29,4 @@ lazy val root = (project in file("."))
   )
 
 addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+addCompilerPlugin("org.typelevel" % "kind-projector_2.13.13" % "0.13.3")

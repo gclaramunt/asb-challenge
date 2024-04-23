@@ -1,13 +1,14 @@
 package gclaramunt.asbchallenge
 
 import cats.FlatMap
+import cats.syntax.all._
 import gclaramunt.asbchallenge.storage.PRStore.contributorQ
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 import skunk.Session
 
 trait ContributorMetrics[F[_]] {
-  def get(id: Long): F[ContributorMetrics.Aggregation]
+  def get(login: String): F[ContributorMetrics.Aggregation]
 }
 
 object ContributorMetrics {
@@ -18,7 +19,7 @@ object ContributorMetrics {
 
   final case class Aggregation(
       totalProjects: Long,
-      //totalCommits: Long,
+      totalCommits: Long,
       totalOpenPRs: Long,
       totalClosedPRs: Long
   )
@@ -27,8 +28,8 @@ object ContributorMetrics {
     new ContributorMetrics[F] {
 
       val query = s.prepare(contributorQ)
-      override def get(id: Long): F[Aggregation] =
-        FlatMap[F].flatMap(query)(_.unique(id))
+      override def get(login: String): F[Aggregation] =
+        query.flatMap(_.unique(login))
     }
 
   //move encoders outside

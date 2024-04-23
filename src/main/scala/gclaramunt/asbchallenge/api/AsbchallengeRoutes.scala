@@ -27,9 +27,9 @@ object AsbchallengeRoutes {
     val dsl = new Http4sDsl[F] {}
     import dsl._
     val basePath = Root / "contributors"
-    HttpRoutes.of[F] { case GET -> `basePath` / contributorId / "metrics" =>
+    HttpRoutes.of[F] { case GET -> `basePath` / contributorLogin / "metrics" =>
       for {
-        metrics <- CM.get(contributorId.toLong)
+        metrics <- CM.get(contributorLogin)
         resp <- Ok(metrics)
       } yield resp
     }

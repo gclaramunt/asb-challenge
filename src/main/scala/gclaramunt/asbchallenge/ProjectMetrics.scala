@@ -1,6 +1,7 @@
 package gclaramunt.asbchallenge
 
 import cats.FlatMap
+import cats.syntax.all._
 import gclaramunt.asbchallenge.storage.PRStore.projectQ
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
@@ -21,7 +22,7 @@ object ProjectMetrics {
 
   final case class Aggregation(
       totalContributors: Long,
-      //totalCommits: Long,
+      totalCommits: Long,
       totalOpenPRs: Long,
       totalClosedPRs: Long
   )
@@ -33,7 +34,7 @@ object ProjectMetrics {
           projectUser: String,
           projectRepo: String
       ): F[Aggregation] =
-        FlatMap[F].flatMap(query)(_.unique((projectUser, projectRepo)))
+        query.flatMap(_.unique((projectUser, projectRepo)))
     }
 
   //move encoders outside
