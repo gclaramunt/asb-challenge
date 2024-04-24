@@ -6,6 +6,7 @@ import gclaramunt.asbchallenge.storage.PRStore.contributorQ
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 import skunk.Session
+import skunk._
 
 trait ContributorMetrics[F[_]] {
   def get(login: String): F[ContributorMetrics.Aggregation]
@@ -29,7 +30,7 @@ object ContributorMetrics {
 
       val query = s.prepare(contributorQ)
       override def get(login: String): F[Aggregation] =
-        query.flatMap(_.unique(login))
+        query.flatMap(_.unique((login, login)))
     }
 
   //move encoders outside

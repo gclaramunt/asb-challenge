@@ -27,7 +27,7 @@ object AsbchallengeServer {
           AsbchallengeRoutes.contributorRoutes[F](contributorSvc)
       ).orNotFound
       // With Middlewares in place
-      Logger.httpApp(true, true)(httpApp)
+      Logger.httpApp(logHeaders = true, logBody = true)(httpApp)
     }
     _ <- EmberServerBuilder
       .default[F]

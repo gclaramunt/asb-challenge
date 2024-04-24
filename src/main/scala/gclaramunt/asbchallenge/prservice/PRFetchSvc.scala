@@ -124,7 +124,7 @@ class PRFetchSvc(httpClient: Client[IO]) {
     }
   }
 
-  def fetchAndStoreAll(s: Session[IO]) = {
+  def fetchAndStoreAll(s: Session[IO]): IO[Unit] = {
 
     val prs = prStream()
     fetchAndStorePRCommits(s)(prs)
