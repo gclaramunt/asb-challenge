@@ -1,14 +1,14 @@
 package gclaramunt.asbchallenge.api
 
-import cats.effect.Sync
+import cats.effect.{Concurrent}
 import cats.syntax.all._
-import gclaramunt.asbchallenge.{ContributorMetrics, ProjectMetrics}
+import gclaramunt.asbchallenge.{ContributorMetrics, ProjectMetrics, PullRequestFromWH, StoreService}
 import org.http4s.HttpRoutes
 import org.http4s.dsl.Http4sDsl
 
 object AsbchallengeRoutes {
 
-  def projectRoutes[F[_]: Sync](PM: ProjectMetrics[F]): HttpRoutes[F] = {
+  def queryProjectRoutes[F[_]: Concurrent](PM: ProjectMetrics[F]): HttpRoutes[F] = {
     val dsl = new Http4sDsl[F] {}
     import dsl._
     val basePath = Root / "projects"
@@ -21,7 +21,7 @@ object AsbchallengeRoutes {
     }
   }
 
-  def contributorRoutes[F[_]: Sync](
+  def queryContributorRoutes[F[_]: Concurrent](
       CM: ContributorMetrics[F]
   ): HttpRoutes[F] = {
     val dsl = new Http4sDsl[F] {}
@@ -34,4 +34,19 @@ object AsbchallengeRoutes {
       } yield resp
     }
   }
+
+  def insertRoutes[F[_]: Concurrent](SV: StoreService[F]): HttpRoutes[F] = {
+    val dsl = new Http4sDsl[F] {}
+    import dsl._
+    HttpRoutes.of[F] {
+      case req@POST -> Root =>
+
+        for {
+          pr <- req.as[PullRequestFromWH]
+          _ <- SV.storePR(pr)
+          resp <- Ok()
+        } yield resp
+    }
+  }
+
 }

@@ -39,7 +39,7 @@ class AsbChallengeRoutesSpec extends CatsEffectSuite {
       ): IO[ProjectMetrics.Aggregation] =
         IO.pure(ProjectMetrics.Aggregation(0, 0, 0, 0))
     }
-    AsbchallengeRoutes.projectRoutes(pm).orNotFound(getProject)
+    AsbchallengeRoutes.queryProjectRoutes(pm).orNotFound(getProject)
   }
 
   private[this] val retContributor: IO[Response[IO]] = {
@@ -48,7 +48,7 @@ class AsbChallengeRoutesSpec extends CatsEffectSuite {
       override def get(login: String): IO[ContributorMetrics.Aggregation] =
         IO.pure(ContributorMetrics.Aggregation(0, 0, 0, 0))
     }
-    AsbchallengeRoutes.contributorRoutes(cm).orNotFound(getContributor)
+    AsbchallengeRoutes.queryContributorRoutes(cm).orNotFound(getContributor)
   }
 
 }

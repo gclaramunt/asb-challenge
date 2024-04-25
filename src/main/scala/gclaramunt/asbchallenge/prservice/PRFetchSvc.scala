@@ -2,14 +2,14 @@ package gclaramunt.asbchallenge.prservice
 
 import cats.effect.{IO, IOApp}
 import fs2.Chunk
-import gclaramunt.asbchallenge.{Config, PRData, PRUserCommit}
 import gclaramunt.asbchallenge.Config.GitHubConfig
 import gclaramunt.asbchallenge.storage.PRStore.{insertPR, insertPRCommit}
 import gclaramunt.asbchallenge.storage.session
-import github4s.{GHResponse, GithubClient, GithubConfig}
+import gclaramunt.asbchallenge.{Config, PRData, PRUserCommit}
 import github4s.domain.{PRFilterClosed, PRFilterOpen, Pagination, PullRequest}
 import github4s.interpreters.StaticAccessToken
 import github4s.modules.GithubAPIsV3
+import github4s.{GHResponse, GithubClient, GithubConfig}
 import org.http4s.client.Client
 import org.http4s.ember.client.EmberClientBuilder
 import skunk.Session

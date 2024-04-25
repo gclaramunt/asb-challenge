@@ -18,4 +18,9 @@ package object api {
       : EntityEncoder[F, ProjectMetrics.Aggregation] =
     jsonEncoderOf
 
+  implicit def pPRWHEntityDec[F[_]: Concurrent]
+      : EntityDecoder[F, PullRequestFromWH] = jsonOf
+  implicit def pPRWHEntityEnc[F[_]]: EntityEncoder[F, PullRequestFromWH] =
+    jsonEncoderOf
+
 }

@@ -1,7 +1,7 @@
 package gclaramunt.asbchallenge.api
 
-import cats.effect.std.Console
 import cats.effect.Async
+import cats.effect.std.Console
 import cats.syntax.all._
 import com.comcast.ip4s._
 import fs2.io.net.Network
@@ -21,10 +21,12 @@ object AsbchallengeServer {
     finalHttpApp = {
       val projectSvc = ProjectMetrics.impl[F](s)
       val contributorSvc = ContributorMetrics.impl[F](s)
+      val storeSvc = StoreServiceImpl.impl[F](s)
 
       val httpApp = (
-        AsbchallengeRoutes.projectRoutes[F](projectSvc) <+>
-          AsbchallengeRoutes.contributorRoutes[F](contributorSvc)
+        AsbchallengeRoutes.queryProjectRoutes[F](projectSvc) <+>
+          AsbchallengeRoutes.queryContributorRoutes[F](contributorSvc) <+>
+          AsbchallengeRoutes.insertRoutes[F](storeSvc)
       ).orNotFound
       // With Middlewares in place
       Logger.httpApp(logHeaders = true, logBody = true)(httpApp)

@@ -1,14 +1,9 @@
 package gclaramunt.asbchallenge.storage
 
-import gclaramunt.asbchallenge.{
-  ContributorMetrics,
-  PRData,
-  PRUserCommit,
-  ProjectMetrics
-}
-import skunk.{*:, Command, EmptyTuple, Query}
+import gclaramunt.asbchallenge.{ContributorMetrics, PRData, PRUserCommit, ProjectMetrics}
 import skunk.codec.all.{int4, int8, varchar}
 import skunk.implicits.toStringOps
+import skunk.{*:, Command, EmptyTuple, Query}
 
 object PRStore {
 
